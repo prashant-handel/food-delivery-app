@@ -12,6 +12,41 @@ const Card = (props) => {
   let priceRef = useRef();
 
   const handleAddToCart = async () => {
+    let food = [];
+    for (const item of data) {
+      if (item.id === foodItem._id) {
+        food = item;
+
+        break;
+      }
+    }
+    console.log(food);
+    console.log(new Date());
+    if (food !== []) {
+      if (food.size === size) {
+        await dispatch({
+          type: "UPDATE",
+          id: foodItem._id,
+          price: finalPrice,
+          quantity: quantity,
+        });
+        return;
+      } else if (food.size !== size) {
+        await dispatch({
+          type: "ADD",
+          id: foodItem._id,
+          name: foodItem.name,
+          price: finalPrice,
+          quantity: quantity,
+          size: size,
+          img: props.ImgSrc,
+        });
+        console.log("Size different so simply ADD one more to the list");
+        return;
+      }
+      return;
+    }
+
     await dispatch({
       type: "ADD",
       id: foodItem._id,
@@ -20,14 +55,15 @@ const Card = (props) => {
       quantity: quantity,
       size: size,
     });
-    console.log(data);
+
+    // setBtnEnable(true)
   };
 
   let finalPrice = quantity * parseInt(options[size]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setSize(priceRef.current.value);
-  },[])
+  }, []);
 
   return (
     <div>
