@@ -10,7 +10,10 @@ const Carousel = () => {
         style={{ objectFit: "contain !important" }}
       >
         <div className="carousel-inner" id="carousel">
-          <div className="carousel-caption" style={{ zIndex: "10", 'opacity':'0.8'}}>
+          <div
+            className="carousel-caption"
+            style={{ zIndex: "10", opacity: "0.8" }}
+          >
             <form className="d-flex">
               <input
                 className="form-control me-2"

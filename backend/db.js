@@ -14,7 +14,11 @@ const connectDB = async () => {
 
   const fetchedData = await mongoose.connection.db.collection("food-item");
   const data = await fetchedData.find({}).toArray();
-  console.log(data);
+  global.foodItem = data;
+
+  const foodCategory = await mongoose.connection.db.collection("food-category");
+  const catData = await foodCategory.find({}).toArray();
+  global.foodCategory = catData;
 };
 
 module.exports = connectDB;

@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const jwtSecret = 'foodeee_jwt_secret';
 
 router.post(
   "/createuser",
@@ -15,10 +18,13 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    let secPassword = await bcrypt.hash(req.body.password, salt);
+
     try {
       await User.create({
         name: req.body.name,
-        password: req.body.password,
+        password: secPassword,
         email: req.body.email,
         address: req.body.address,
       });
@@ -49,11 +55,18 @@ router.post(
       let userData = await User.findOne({ email });
       if (!userData) {
         return res.status(400).json("Please enter correct email or sign up!");
-      } else if (req.body.password !== userData.password) {
+      } 
+      const pwdCompare = await bcrypt.compare(req.body.password,userData.password);
+      if (pwdCompare==false) {
         return res.status(400).json("Please enter correct password or sign up!");
-      } else {
-        return res.json({ success: true });
       }
+        const data = {
+          user: {
+            id:userData.id
+          }
+        }
+        const authToken = jwt.sign(data, jwtSecret);
+        return res.json({ success: true, authToken:authToken });
     } catch (error) {
       console.log(error);
       res.json({ success: false });
