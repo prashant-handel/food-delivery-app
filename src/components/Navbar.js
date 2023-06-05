@@ -5,7 +5,6 @@ import Modal from "../Modal";
 import Cart from "../screens/Cart";
 import { useCart } from "./ContextReducer";
 
-
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -36,15 +35,6 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto mb-2">
-              <li className="nav-item">
-                <Link
-                  className="nav-link active fs-5"
-                  aria-current="page"
-                  to="/"
-                >
-                  Home
-                </Link>
-              </li>
               {localStorage.getItem("authToken") ? (
                 <li className="nav-item">
                   <Link
@@ -52,7 +42,7 @@ const Navbar = () => {
                     aria-current="page"
                     to="/"
                   >
-                    My Orders
+                    Home
                   </Link>
                 </li>
               ) : (
@@ -71,13 +61,24 @@ const Navbar = () => {
                 </div>
               ) : (
                 <>
-                  <div className="btn bg-white text-success mx-2" onClick={()=>setCartView(true)}>
+                  <div
+                    className="btn bg-white text-success mx-2"
+                    onClick={() => setCartView(true)}
+                  >
                     My Cart{" "}
                     <Badge pill bg="danger">
                       {data.length}
                     </Badge>
                   </div>
-                  {cartView? <Modal onClose={()=>{setCartView(false)}} ><Cart/></Modal>:null}
+                  {cartView ? (
+                    <Modal
+                      onClose={() => {
+                        setCartView(false);
+                      }}
+                    >
+                      <Cart />
+                    </Modal>
+                  ) : null}
                   <div
                     className="btn bg-white text-danger mx-2"
                     onClick={handleLogout}
